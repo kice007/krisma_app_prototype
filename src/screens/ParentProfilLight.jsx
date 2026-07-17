@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import { ChevronLeft, ChevronRight, Bell, Palette, Globe, MessageCircle, Settings2, CircleCheckBig, Users2 } from 'lucide-react'
 import StatusBar from '../components/StatusBar'
 import ParentTabBar from '../components/ParentTabBar'
+import ThemeToggle from '../components/ThemeToggle'
 
 const SETTINGS_ROWS = [
 
@@ -126,7 +127,11 @@ export default function ParentProfilLight() {
                   <span style={{ fontFamily: 'Inter', fontSize: 12, color: '#737373' }}>{sub}</span>
                 </div>
               </div>
-              <ChevronRight size={16} color="#555577" strokeWidth={1.5} />
+              {label === 'Apparence' ? (
+                <ThemeToggle />
+              ) : (
+                <ChevronRight size={16} color="#555577" strokeWidth={1.5} />
+              )}
             </div>
           ))}
         </motion.div>

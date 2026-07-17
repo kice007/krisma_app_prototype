@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
+import { ThemeProvider, useTheme } from './theme'
 import Splash from './screens/Splash'
 import Welcome from './screens/Welcome'
 import WhoAreYou from './screens/WhoAreYou'
@@ -104,114 +105,95 @@ import NewPasswordLight from './screens/NewPasswordLight'
 import PasswordReset from './screens/PasswordReset'
 import PasswordResetLight from './screens/PasswordResetLight'
 
+// Dark-only screens (onboarding). No light variant exists for these.
+const SINGLES = [
+  ['/', Splash],
+  ['/welcome', Welcome],
+  ['/who', WhoAreYou],
+  ['/register', CreateAccount],
+  ['/phone', Phone],
+  ['/otp', Otp],
+  ['/info', PersonalInfo],
+  ['/id-doc', IdDoc],
+  ['/selfie', Selfie],
+  ['/selfie-scan', SelfieScan],
+  ['/selfie-success', SelfieSuccess],
+  ['/account-created', AccountCreated],
+  ['/parent-phone', ParentPhone],
+  ['/parent-otp', ParentOtp],
+  ['/parrainage-code', ParrainageCode],
+  ['/parent-info', ParentInfo],
+  ['/parent-id-doc', ParentIdDoc],
+  ['/parent-selfie', ParentSelfie],
+  ['/parent-selfie-scan', ParentSelfieScan],
+  ['/parent-selfie-success', ParentSelfieSuccess],
+  ['/parent-pin', ParentPin],
+]
+
+// Screens with a light + dark variant. Both the base path and the `-light` path
+// render the variant that matches the global theme, so the appearance toggle
+// controls the whole app regardless of which path a screen navigates to.
+const PAIRS = [
+  ['/login', Login, LoginLight],
+  ['/dashboard', Dashboard, DashboardLight],
+  ['/analytique', Analytique, AnalytiqueLight],
+  ['/carte', Carte, CarteLight],
+  ['/parametres-carte', ParametresCarte, ParametresCarteLight],
+  ['/demande-limit', DemandeLimit, DemandeLimitLight],
+  ['/limite-soumise', LimiteSoumise, LimiteSoumiseLight],
+  ['/transactions', Transactions, TransactionsLight],
+  ['/transaction-detail', TransactionDetail, TransactionDetailLight],
+  ['/transactions-filtered', TransactionsFiltered, TransactionsFilteredLight],
+  ['/demande-destinataire', DemandeDestinataire, DemandeDestinataireLight],
+  ['/demande-montant', DemandeMontant, DemandeMontantLight],
+  ['/envoyer-destinataire', EnvoyerDestinataire, EnvoyerDestinataireLight],
+  ['/envoyer-montant', EnvoyerMontant, EnvoyerMontantLight],
+  ['/envoyer-confirmation', EnvoyerConfirmation, EnvoyerConfirmationLight],
+  ['/envoyer-succes', EnvoyerSucces, EnvoyerSuccesLight],
+  ['/demande-succes', DemandeSucces, DemandeSuccesLight],
+  ['/scolarite-montant', ScolariteMontant, ScolariteMontantLight],
+  ['/scolarite-succes', ScolariteSucces, ScolariteSuccesLight],
+  ['/profil', ProfilDocumentsAlt, ProfilDocumentsAltLight],
+  ['/langue', LangueSelection, LangueSelectionLight],
+  ['/notifications', Notifications, NotificationsLight],
+  ['/notification-detail', NotificationDetail, NotificationDetailLight],
+  ['/parent-connexion', ParentConnexion, ParentConnexionLight],
+  ['/parent-dashboard', ParentDashboard, ParentDashboardLight],
+  ['/parent-envoyer-beneficiaire', ParentEnvoyerBeneficiaire, ParentEnvoyerBeneficiaireLight],
+  ['/parent-envoyer-montant', ParentEnvoyerMontant, ParentEnvoyerMontantLight],
+  ['/parent-mode-paiement', ParentModePaiement, ParentModePaiementLight],
+  ['/parent-envoyer-succes', ParentEnvoyerSucces, ParentEnvoyerSuccesLight],
+  ['/parent-historique', ParentHistorique, ParentHistoriqueLight],
+  ['/parent-profil', ParentProfil, ParentProfilLight],
+  ['/parent-notifications', ParentNotifications, ParentNotificationsLight],
+  ['/parent-notification-detail', ParentNotificationDetail, ParentNotificationDetailLight],
+  ['/parent-forgot-pin', ParentForgotPin, ParentForgotPinLight],
+  ['/parent-forgot-pin-verify', ParentForgotPinVerify, ParentForgotPinVerifyLight],
+  ['/parent-new-pin', ParentNewPin, ParentNewPinLight],
+  ['/parent-pin-reset', ParentPinReset, ParentPinResetLight],
+  ['/forgot-password', ForgotPassword, ForgotPasswordLight],
+  ['/forgot-password-verify', ForgotPasswordVerify, ForgotPasswordVerifyLight],
+  ['/new-password', NewPassword, NewPasswordLight],
+  ['/password-reset', PasswordReset, PasswordResetLight],
+]
+
+function Themed({ dark: Dark, light: Light }) {
+  const { theme } = useTheme()
+  return theme === 'light' ? <Light /> : <Dark />
+}
+
 function AnimatedRoutes() {
   const location = useLocation()
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
-        <Route path="/"               element={<Splash />} />
-        <Route path="/welcome"        element={<Welcome />} />
-        <Route path="/who"            element={<WhoAreYou />} />
-        <Route path="/register"       element={<CreateAccount />} />
-        <Route path="/phone"          element={<Phone />} />
-        <Route path="/otp"            element={<Otp />} />
-        <Route path="/info"           element={<PersonalInfo />} />
-        <Route path="/id-doc"         element={<IdDoc />} />
-        <Route path="/selfie"         element={<Selfie />} />
-        <Route path="/selfie-scan"     element={<SelfieScan />} />
-        <Route path="/selfie-success"   element={<SelfieSuccess />} />
-        <Route path="/account-created"       element={<AccountCreated />} />
-        <Route path="/parent-phone"          element={<ParentPhone />} />
-        <Route path="/parent-otp"            element={<ParentOtp />} />
-        <Route path="/parrainage-code"       element={<ParrainageCode />} />
-        <Route path="/parent-info"           element={<ParentInfo />} />
-        <Route path="/parent-id-doc"         element={<ParentIdDoc />} />
-        <Route path="/parent-selfie"         element={<ParentSelfie />} />
-        <Route path="/parent-selfie-scan"    element={<ParentSelfieScan />} />
-        <Route path="/parent-selfie-success" element={<ParentSelfieSuccess />} />
-        <Route path="/parent-pin"            element={<ParentPin />} />
-        <Route path="/parent-connexion"       element={<ParentConnexion />} />
-        <Route path="/parent-connexion-light" element={<ParentConnexionLight />} />
-        <Route path="/parent-dashboard"                    element={<ParentDashboard />} />
-        <Route path="/parent-dashboard-light"             element={<ParentDashboardLight />} />
-        <Route path="/parent-envoyer-beneficiaire"        element={<ParentEnvoyerBeneficiaire />} />
-        <Route path="/parent-envoyer-beneficiaire-light"  element={<ParentEnvoyerBeneficiaireLight />} />
-        <Route path="/parent-envoyer-montant"             element={<ParentEnvoyerMontant />} />
-        <Route path="/parent-envoyer-montant-light"       element={<ParentEnvoyerMontantLight />} />
-        <Route path="/parent-mode-paiement"               element={<ParentModePaiement />} />
-        <Route path="/parent-mode-paiement-light"         element={<ParentModePaiementLight />} />
-        <Route path="/parent-envoyer-succes"              element={<ParentEnvoyerSucces />} />
-        <Route path="/parent-envoyer-succes-light"        element={<ParentEnvoyerSuccesLight />} />
-        <Route path="/parent-historique"                  element={<ParentHistorique />} />
-        <Route path="/parent-historique-light"            element={<ParentHistoriqueLight />} />
-        <Route path="/parent-profil"                      element={<ParentProfil />} />
-        <Route path="/parent-profil-light"                element={<ParentProfilLight />} />
-        <Route path="/login"            element={<Login />} />
-        <Route path="/login-light"      element={<LoginLight />} />
-        <Route path="/dashboard"        element={<Dashboard />} />
-        <Route path="/dashboard-light"  element={<DashboardLight />} />
-        <Route path="/analytique"       element={<Analytique />} />
-        <Route path="/analytique-light" element={<AnalytiqueLight />} />
-        <Route path="/carte"                    element={<Carte />} />
-        <Route path="/carte-light"            element={<CarteLight />} />
-        <Route path="/parametres-carte"       element={<ParametresCarte />} />
-        <Route path="/parametres-carte-light" element={<ParametresCarteLight />} />
-        <Route path="/demande-limit"          element={<DemandeLimit />} />
-        <Route path="/demande-limit-light"    element={<DemandeLimitLight />} />
-        <Route path="/limite-soumise"         element={<LimiteSoumise />} />
-        <Route path="/limite-soumise-light"   element={<LimiteSoumiseLight />} />
-        <Route path="/transactions"              element={<Transactions />} />
-        <Route path="/transactions-light"      element={<TransactionsLight />} />
-        <Route path="/transaction-detail"           element={<TransactionDetail />} />
-        <Route path="/transaction-detail-light"      element={<TransactionDetailLight />} />
-        <Route path="/transactions-filtered"         element={<TransactionsFiltered />} />
-        <Route path="/transactions-filtered-light"   element={<TransactionsFilteredLight />} />
-        <Route path="/demande-destinataire"          element={<DemandeDestinataire />} />
-        <Route path="/demande-destinataire-light"   element={<DemandeDestinataireLight />} />
-        <Route path="/demande-montant"              element={<DemandeMontant />} />
-        <Route path="/demande-montant-light"        element={<DemandeMontantLight />} />
-        <Route path="/envoyer-destinataire"          element={<EnvoyerDestinataire />} />
-        <Route path="/envoyer-destinataire-light"    element={<EnvoyerDestinataireLight />} />
-        <Route path="/envoyer-montant"               element={<EnvoyerMontant />} />
-        <Route path="/envoyer-montant-light"         element={<EnvoyerMontantLight />} />
-        <Route path="/envoyer-confirmation"          element={<EnvoyerConfirmation />} />
-        <Route path="/envoyer-confirmation-light"    element={<EnvoyerConfirmationLight />} />
-        <Route path="/envoyer-succes"                element={<EnvoyerSucces />} />
-        <Route path="/envoyer-succes-light"          element={<EnvoyerSuccesLight />} />
-        <Route path="/demande-succes"                element={<DemandeSucces />} />
-        <Route path="/demande-succes-light"          element={<DemandeSuccesLight />} />
-        <Route path="/scolarite-montant"             element={<ScolariteMontant />} />
-        <Route path="/scolarite-montant-light"       element={<ScolariteMontantLight />} />
-        <Route path="/scolarite-succes"              element={<ScolariteSucces />} />
-        <Route path="/scolarite-succes-light"        element={<ScolariteSuccesLight />} />
-        <Route path="/profil"                        element={<ProfilDocumentsAlt />} />
-        <Route path="/profil-light"                  element={<ProfilDocumentsAltLight />} />
-        <Route path="/langue"                        element={<LangueSelection />} />
-        <Route path="/langue-light"                  element={<LangueSelectionLight />} />
-        <Route path="/notifications"                 element={<Notifications />} />
-        <Route path="/notifications-light"           element={<NotificationsLight />} />
-        <Route path="/notification-detail"           element={<NotificationDetail />} />
-        <Route path="/notification-detail-light"     element={<NotificationDetailLight />} />
-        <Route path="/parent-notifications"               element={<ParentNotifications />} />
-        <Route path="/parent-notifications-light"         element={<ParentNotificationsLight />} />
-        <Route path="/parent-notification-detail"         element={<ParentNotificationDetail />} />
-        <Route path="/parent-notification-detail-light"   element={<ParentNotificationDetailLight />} />
-        <Route path="/parent-forgot-pin"              element={<ParentForgotPin />} />
-        <Route path="/parent-forgot-pin-light"        element={<ParentForgotPinLight />} />
-        <Route path="/parent-forgot-pin-verify"       element={<ParentForgotPinVerify />} />
-        <Route path="/parent-forgot-pin-verify-light" element={<ParentForgotPinVerifyLight />} />
-        <Route path="/parent-new-pin"                 element={<ParentNewPin />} />
-        <Route path="/parent-new-pin-light"           element={<ParentNewPinLight />} />
-        <Route path="/parent-pin-reset"               element={<ParentPinReset />} />
-        <Route path="/parent-pin-reset-light"         element={<ParentPinResetLight />} />
-        <Route path="/forgot-password"                element={<ForgotPassword />} />
-        <Route path="/forgot-password-light"          element={<ForgotPasswordLight />} />
-        <Route path="/forgot-password-verify"         element={<ForgotPasswordVerify />} />
-        <Route path="/forgot-password-verify-light"   element={<ForgotPasswordVerifyLight />} />
-        <Route path="/new-password"                   element={<NewPassword />} />
-        <Route path="/new-password-light"             element={<NewPasswordLight />} />
-        <Route path="/password-reset"                 element={<PasswordReset />} />
-        <Route path="/password-reset-light"           element={<PasswordResetLight />} />
+        {SINGLES.map(([path, Comp]) => (
+          <Route key={path} path={path} element={<Comp />} />
+        ))}
+        {PAIRS.flatMap(([base, D, L]) => [
+          <Route key={base} path={base} element={<Themed dark={D} light={L} />} />,
+          <Route key={`${base}-light`} path={`${base}-light`} element={<Themed dark={D} light={L} />} />,
+        ])}
       </Routes>
     </AnimatePresence>
   )
@@ -219,17 +201,19 @@ function AnimatedRoutes() {
 
 function App() {
   return (
-    <BrowserRouter>
-      <div
-        className="flex min-h-[100dvh] w-full items-center justify-center sm:p-4"
-        style={{ backgroundColor: '#1C1C1E' }}
-      >
-        {/* Fills the whole device on phones; shows a centered 390×844 mockup on ≥ sm screens */}
-        <div className="relative h-[100dvh] w-full overflow-hidden sm:h-[844px] sm:max-h-[100svh] sm:w-[390px] sm:rounded-[44px] sm:shadow-2xl">
-          <AnimatedRoutes />
+    <ThemeProvider>
+      <BrowserRouter>
+        <div
+          className="flex min-h-[100dvh] w-full items-center justify-center sm:p-4"
+          style={{ backgroundColor: '#1C1C1E' }}
+        >
+          {/* Fills the whole device on phones; centered 390×844 mockup on ≥ sm screens */}
+          <div className="relative h-[100dvh] w-full overflow-hidden sm:h-[844px] sm:max-h-[100svh] sm:w-[390px] sm:rounded-[44px] sm:shadow-2xl">
+            <AnimatedRoutes />
+          </div>
         </div>
-      </div>
-    </BrowserRouter>
+      </BrowserRouter>
+    </ThemeProvider>
   )
 }
 

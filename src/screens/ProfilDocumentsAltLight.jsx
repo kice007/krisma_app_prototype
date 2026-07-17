@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import StatusBar from '../components/StatusBar'
 import TabBar from '../components/TabBar'
+import ThemeToggle from '../components/ThemeToggle'
 import imgWhatsApp from '../assets/wha.png'
 import imgTelegram from '../assets/telegram.png'
 import imgIMessage from '../assets/imessage.png'
@@ -124,7 +125,7 @@ function LogoutIcon({ color = '#EF4444', size = 16 }) {
 }
 
 /* ─── Settings row (light) ─── */
-function SettRow({ icon, label, value, onClick }) {
+function SettRow({ icon, label, value, onClick, right }) {
   return (
     <div
       onClick={onClick}
@@ -146,10 +147,12 @@ function SettRow({ icon, label, value, onClick }) {
           {label}
         </span>
       </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-        <span style={{ fontFamily: 'Inter', fontSize: 13, fontWeight: 400, color: '#8080A0' }}>{value}</span>
-        <ChevronRight color="#8080A0" size={16} />
-      </div>
+      {right ? right : (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <span style={{ fontFamily: 'Inter', fontSize: 13, fontWeight: 400, color: '#8080A0' }}>{value}</span>
+          <ChevronRight color="#8080A0" size={16} />
+        </div>
+      )}
     </div>
   )
 }
@@ -402,7 +405,7 @@ export default function ProfilDocumentsAltLight() {
             }}>
               <SettRow icon={<GlobalIcon color="#4F46E5" size={20} />} label="Langue" value="Français" onClick={() => navigate('/langue-light')} />
               <div style={{ height: 1, backgroundColor: '#e5e5f0' }} />
-              <SettRow icon={<AppearanceIcon color="#4F46E5" size={20} />} label="Apparence" value="sombre" />
+              <SettRow icon={<AppearanceIcon color="#4F46E5" size={20} />} label="Apparence" right={<ThemeToggle />} />
               <div style={{ height: 1, backgroundColor: '#e5e5f0' }} />
               <SettRow icon={<BellIcon color="#4F46E5" size={20} />} label="Notifications" value="Activées" />
               <div style={{ height: 1, backgroundColor: '#e5e5f0' }} />
