@@ -17,6 +17,14 @@ function Corner({ path, x, y }) {
   )
 }
 
+// Pace of the scan counter: base cadence + a dwell (slow-down) centred on ~40%,
+// so it lingers there for a moment before picking the pace back up.
+function scanDelay(pct) {
+  const base = 34
+  const dwell = 210 * Math.exp(-Math.pow((pct - 40) / 3.2, 2))
+  return base + dwell
+}
+
 export default function ParentSelfieScan() {
   const navigate  = useNavigate()
   const videoRef  = useRef(null)
@@ -43,26 +51,31 @@ export default function ParentSelfieScan() {
     return () => stopStream()
   }, [])
 
+  // Progress 0 → 100 at an eased pace (slower, with a slow-down around 40%),
+  // then capture frame and navigate.
   useEffect(() => {
     let pct = 0
-    const id = setInterval(() => {
+    let timer
+    const captureAndGo = () => {
+      const video = videoRef.current
+      let screenshot = null
+      if (video && video.readyState >= 2) {
+        const canvas = document.createElement('canvas')
+        canvas.width  = video.videoWidth  || 390
+        canvas.height = video.videoHeight || 844
+        canvas.getContext('2d').drawImage(video, 0, 0)
+        screenshot = canvas.toDataURL('image/jpeg', 0.85)
+      }
+      navigate('/parent-selfie-success', { state: { screenshot } })
+    }
+    const step = () => {
       pct += 1
       setProgress(pct)
-      if (pct >= 100) {
-        clearInterval(id)
-        const video = videoRef.current
-        let screenshot = null
-        if (video && video.readyState >= 2) {
-          const canvas = document.createElement('canvas')
-          canvas.width  = video.videoWidth  || 390
-          canvas.height = video.videoHeight || 844
-          canvas.getContext('2d').drawImage(video, 0, 0)
-          screenshot = canvas.toDataURL('image/jpeg', 0.85)
-        }
-        navigate('/parent-selfie-success', { state: { screenshot } })
-      }
-    }, 30)
-    return () => clearInterval(id)
+      if (pct >= 100) { captureAndGo(); return }
+      timer = setTimeout(step, scanDelay(pct))
+    }
+    timer = setTimeout(step, scanDelay(0))
+    return () => clearTimeout(timer)
   }, [navigate])
 
   return (
