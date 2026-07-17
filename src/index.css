@@ -11,6 +11,10 @@ html, body, #root {
   width: 100%;
 }
 
+body {
+  overflow-x: hidden;
+}
+
 input::placeholder {
   color: #3A3A5A;
 }

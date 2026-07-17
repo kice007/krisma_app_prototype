@@ -221,13 +221,11 @@ function App() {
   return (
     <BrowserRouter>
       <div
-        className="min-h-screen w-full flex items-center justify-center"
+        className="flex min-h-[100dvh] w-full items-center justify-center sm:p-4"
         style={{ backgroundColor: '#1C1C1E' }}
       >
-        <div
-          className="relative overflow-hidden"
-          style={{ width: '390px', height: '844px', maxHeight: '100svh' }}
-        >
+        {/* Fills the whole device on phones; shows a centered 390×844 mockup on ≥ sm screens */}
+        <div className="relative h-[100dvh] w-full overflow-hidden sm:h-[844px] sm:max-h-[100svh] sm:w-[390px] sm:rounded-[44px] sm:shadow-2xl">
           <AnimatedRoutes />
         </div>
       </div>
